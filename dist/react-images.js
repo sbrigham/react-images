@@ -379,7 +379,10 @@ var defaultStyles$1 = {
 
 		// disable user select
 		WebkitTouchCallout: 'none',
-		userSelect: 'none'
+		userSelect: 'none',
+		':focus': {
+			outline: '3px solid orange'
+		}
 	},
 
 	// sizes
@@ -569,7 +572,10 @@ var defaultStyles$4 = {
 		height: 40,
 		marginRight: -10,
 		padding: 10,
-		width: 40
+		width: 40,
+		':focus': {
+			outline: '3px solid orange'
+		}
 	}
 };
 
@@ -1000,6 +1006,8 @@ function bindFunctions(functions) {
 
 var canUseDom = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
 
+var Lock = require('react-focus-lock').default;
+
 // consumers sometimes provide incorrect type or casing
 function normalizeSourceSet(data) {
 	var sourceSet = data.srcSet || data.srcset;
@@ -1244,11 +1252,14 @@ var Lightbox = function (_Component) {
 					onTouchEnd: backdropClosesModal && this.closeBackdrop
 				},
 				React__default.createElement(
-					'div',
-					null,
+					Lock,
+					{ disabled: !isOpen },
 					React__default.createElement(
 						'div',
-						{ className: aphrodite.css(this.classes.content), style: { marginBottom: offsetThumbnails, maxWidth: width } },
+						{
+							className: aphrodite.css(this.classes.content),
+							style: { marginBottom: offsetThumbnails, maxWidth: width }
+						},
 						imageLoaded && this.renderHeader(),
 						this.renderImages(),
 						this.renderSpinner(),
@@ -1369,10 +1380,7 @@ var Lightbox = function (_Component) {
 			return React__default.createElement(
 				'div',
 				{ className: aphrodite.css(this.classes.spinner, !imageLoaded && this.classes.spinnerActive) },
-				React__default.createElement(Spinner$$1, {
-					color: spinnerColor,
-					size: spinnerSize
-				})
+				React__default.createElement(Spinner$$1, { color: spinnerColor, size: spinnerSize })
 			);
 		}
 	}, {

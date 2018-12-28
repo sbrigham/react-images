@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { css, StyleSheet } from 'aphrodite';
 import ScrollLock from 'react-scrolllock';
+const LockFocus = require('react-focus-lock').default;
 
 import defaultTheme from './theme';
 import Arrow from './components/Arrow';
@@ -85,8 +86,14 @@ class Lightbox extends Component {
 		}
 
 		// preload current image
-		if (this.props.currentImage !== nextProps.currentImage || !this.props.isOpen && nextProps.isOpen) {
-			const img = this.preloadImageData(nextProps.images[nextProps.currentImage], this.handleImageLoaded);
+		if (
+			this.props.currentImage !== nextProps.currentImage ||
+			(!this.props.isOpen && nextProps.isOpen)
+		) {
+			const img = this.preloadImageData(
+				nextProps.images[nextProps.currentImage],
+				this.handleImageLoaded
+			);
 			if (img) this.setState({ imageLoaded: img.complete });
 		}
 
@@ -129,7 +136,7 @@ class Lightbox extends Component {
 		const { currentImage, images } = this.props;
 		const { imageLoaded } = this.state;
 
-		if (!imageLoaded || currentImage === (images.length - 1)) return;
+		if (!imageLoaded || currentImage === images.length - 1) return;
 
 		if (event) {
 			event.preventDefault();
@@ -159,18 +166,20 @@ class Lightbox extends Component {
 		}
 	}
 	handleKeyboardInput (event) {
-		if (event.keyCode === 37) { // left
+		if (event.keyCode === 37) {
+			// left
 			this.gotoPrev(event);
 			return true;
-		} else if (event.keyCode === 39) { // right
+		} else if (event.keyCode === 39) {
+			// right
 			this.gotoNext(event);
 			return true;
-		} else if (event.keyCode === 27) { // esc
+		} else if (event.keyCode === 27) {
+			// esc
 			this.props.onClose();
 			return true;
 		}
 		return false;
-
 	}
 	handleImageLoaded () {
 		this.setState({ imageLoaded: true });
@@ -194,7 +203,7 @@ class Lightbox extends Component {
 		);
 	}
 	renderArrowNext () {
-		if (this.props.currentImage === (this.props.images.length - 1)) return null;
+		if (this.props.currentImage === this.props.images.length - 1) return null;
 
 		return (
 			<Arrow
@@ -207,12 +216,7 @@ class Lightbox extends Component {
 		);
 	}
 	renderDialog () {
-		const {
-			backdropClosesModal,
-			isOpen,
-			showThumbnails,
-			width,
-		} = this.props;
+		const { backdropClosesModal, isOpen, showThumbnails, width } = this.props;
 
 		const { imageLoaded } = this.state;
 
@@ -229,8 +233,11 @@ class Lightbox extends Component {
 				onClick={backdropClosesModal && this.closeBackdrop}
 				onTouchEnd={backdropClosesModal && this.closeBackdrop}
 			>
-				<div>
-					<div className={css(this.classes.content)} style={{ marginBottom: offsetThumbnails, maxWidth: width }}>
+				<LockFocus disabled={!isOpen}>
+					<div
+						className={css(this.classes.content)}
+						style={{ marginBottom: offsetThumbnails, maxWidth: width }}
+					>
 						{imageLoaded && this.renderHeader()}
 						{this.renderImages()}
 						{this.renderSpinner()}
@@ -240,17 +247,12 @@ class Lightbox extends Component {
 					{imageLoaded && this.renderArrowPrev()}
 					{imageLoaded && this.renderArrowNext()}
 					{this.props.preventScroll && <ScrollLock />}
-				</div>
+				</LockFocus>
 			</Container>
 		);
 	}
 	renderImages () {
-		const {
-			currentImage,
-			images,
-			onClickImage,
-			showThumbnails,
-		} = this.props;
+		const { currentImage, images, onClickImage, showThumbnails } = this.props;
 
 		const { imageLoaded } = this.state;
 
@@ -261,8 +263,10 @@ class Lightbox extends Component {
 		const sizes = sourceSet ? '100vw' : null;
 
 		const thumbnailsSize = showThumbnails ? this.theme.thumbnail.size : 0;
-		const heightOffset = `${this.theme.header.height + this.theme.footer.height + thumbnailsSize
-			+ (this.theme.container.gutter.vertical)}px`;
+		const heightOffset = `${this.theme.header.height +
+			this.theme.footer.height +
+			thumbnailsSize +
+			this.theme.container.gutter.vertical}px`;
 
 		return (
 			<figure className={css(this.classes.figure)}>
@@ -301,12 +305,7 @@ class Lightbox extends Component {
 		);
 	}
 	renderHeader () {
-		const {
-			closeButtonTitle,
-			customControls,
-			onClose,
-			showCloseButton,
-		} = this.props;
+		const { closeButtonTitle, customControls, onClose, showCloseButton } = this.props;
 
 		return (
 			<Header
@@ -318,12 +317,7 @@ class Lightbox extends Component {
 		);
 	}
 	renderFooter () {
-		const {
-			currentImage,
-			images,
-			imageCountSeparator,
-			showImageCount,
-		} = this.props;
+		const { currentImage, images, imageCountSeparator, showImageCount } = this.props;
 
 		if (!images || !images.length) return null;
 
@@ -338,30 +332,19 @@ class Lightbox extends Component {
 		);
 	}
 	renderSpinner () {
-		const {
-			spinner,
-			spinnerColor,
-			spinnerSize,
-		} = this.props;
+		const { spinner, spinnerColor, spinnerSize } = this.props;
 
 		const { imageLoaded } = this.state;
 		const Spinner = spinner;
 
 		return (
 			<div className={css(this.classes.spinner, !imageLoaded && this.classes.spinnerActive)}>
-				<Spinner
-					color={spinnerColor}
-					size={spinnerSize}
-				/>
+				<Spinner color={spinnerColor} size={spinnerSize} />
 			</div>
 		);
 	}
 	render () {
-		return (
-			<Portal>
-				{this.renderDialog()}
-			</Portal>
-		);
+		return <Portal>{this.renderDialog()}</Portal>;
 	}
 }
 
@@ -461,6 +444,5 @@ const defaultStyles = {
 		opacity: 1,
 	},
 };
-
 
 export default Lightbox;
