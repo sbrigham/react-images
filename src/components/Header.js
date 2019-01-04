@@ -22,7 +22,7 @@ function Header ({
 			{customControls ? customControls : <span />}
 			{!!showCloseButton && (
 				<button
-					title={closeButtonTitle}
+					aria-label={closeButtonTitle}
 					className={css(classes.close)}
 					onClick={onClose}
 				>

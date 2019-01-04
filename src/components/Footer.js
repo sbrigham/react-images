@@ -29,7 +29,7 @@ function Footer ({
 	return (
 		<div className={css(classes.footer)} {...props}>
 			{caption ? (
-				<figcaption className={css(classes.footerCaption)}>
+				<figcaption className={css(classes.footerCaption)} aria-hidden>
 					{caption}
 				</figcaption>
 			) : <span />}

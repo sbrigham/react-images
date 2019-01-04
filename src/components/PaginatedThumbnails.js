@@ -20,7 +20,7 @@ const classes = StyleSheet.create({
 });
 
 const arrowStyles = {
-	height: theme.thumbnail.size + (theme.thumbnail.gutter * 2),
+	height: theme.thumbnail.size + theme.thumbnail.gutter * 2,
 	width: 40,
 };
 
@@ -83,7 +83,8 @@ export default class PaginatedThumbnails extends Component {
 
 		if (value < 0) {
 			return 0;
-		} else if (value + totalCount > images.length) { // Too far
+		} else if (value + totalCount > images.length) {
+			// Too far
 			return images.length - totalCount;
 		} else {
 			return value;
@@ -104,7 +105,7 @@ export default class PaginatedThumbnails extends Component {
 				icon="arrowLeft"
 				onClick={this.gotoPrev}
 				style={arrowStyles}
-				title="Previous (Left arrow key)"
+				title="View Previous Image"
 				type="button"
 			/>
 		);
@@ -121,7 +122,7 @@ export default class PaginatedThumbnails extends Component {
 				icon="arrowRight"
 				onClick={this.gotoNext}
 				style={arrowStyles}
-				title="Next (Right arrow key)"
+				title="View Next Image"
 				type="button"
 			/>
 		);
@@ -134,7 +135,8 @@ export default class PaginatedThumbnails extends Component {
 		let baseOffset = 0;
 		if (images.length <= totalCount) {
 			thumbnails = images;
-		} else { // Try to center current image in list
+		} else {
+			// Try to center current image in list
 			baseOffset = this.getFirst();
 			thumbnails = images.slice(baseOffset, baseOffset + totalCount);
 		}
@@ -143,11 +145,13 @@ export default class PaginatedThumbnails extends Component {
 			<div className={css(classes.paginatedThumbnails)}>
 				{this.renderArrowPrev()}
 				{thumbnails.map((img, idx) => (
-					<Thumbnail key={baseOffset + idx}
+					<Thumbnail
+						key={baseOffset + idx}
 						{...img}
 						index={baseOffset + idx}
 						onClick={onClickThumbnail}
-						active={baseOffset + idx === currentImage} />
+						active={baseOffset + idx === currentImage}
+					/>
 				))}
 				{this.renderArrowNext()}
 			</div>

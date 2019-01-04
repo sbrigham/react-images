@@ -317,7 +317,7 @@ class Lightbox extends Component {
 		);
 	}
 	renderFooter () {
-		const { currentImage, images, imageCountSeparator, showImageCount } = this.props;
+		const { currentImage, images, imageCountSeparator, showImageCount, imageCount } = this.props;
 
 		if (!images || !images.length) return null;
 
@@ -326,7 +326,7 @@ class Lightbox extends Component {
 				caption={images[currentImage].caption}
 				countCurrent={currentImage + 1}
 				countSeparator={imageCountSeparator}
-				countTotal={images.length}
+				countTotal={imageCount || images.length}
 				showCount={showImageCount}
 			/>
 		);
@@ -354,6 +354,7 @@ Lightbox.propTypes = {
 	currentImage: PropTypes.number,
 	customControls: PropTypes.arrayOf(PropTypes.node),
 	enableKeyboardInput: PropTypes.bool,
+	imageCount: PropTypes.number,
 	imageCountSeparator: PropTypes.string,
 	images: PropTypes.arrayOf(
 		PropTypes.shape({
@@ -383,15 +384,15 @@ Lightbox.propTypes = {
 	width: PropTypes.number,
 };
 Lightbox.defaultProps = {
-	closeButtonTitle: 'Close (Esc)',
+	closeButtonTitle: 'Close Modal',
 	currentImage: 0,
 	enableKeyboardInput: true,
 	imageCountSeparator: ' of ',
-	leftArrowTitle: 'Previous (Left arrow key)',
+	leftArrowTitle: 'View Previous Image',
 	onClickShowNextImage: true,
 	preloadNextImage: true,
 	preventScroll: true,
-	rightArrowTitle: 'Next (Right arrow key)',
+	rightArrowTitle: 'View Next Image',
 	showCloseButton: true,
 	showImageCount: true,
 	spinner: DefaultSpinner,

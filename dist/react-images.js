@@ -337,7 +337,8 @@ function Arrow(_ref, _ref2) {
 	    icon = _ref.icon,
 	    onClick = _ref.onClick,
 	    size = _ref.size,
-	    props = objectWithoutProperties(_ref, ['direction', 'icon', 'onClick', 'size']);
+	    title = _ref.title,
+	    props = objectWithoutProperties(_ref, ['direction', 'icon', 'onClick', 'size', 'title']);
 
 	var classes = noImportant.StyleSheet.create(deepMerge(defaultStyles$1, theme$$1));
 
@@ -347,7 +348,8 @@ function Arrow(_ref, _ref2) {
 			type: 'button',
 			className: noImportant.css(classes.arrow, classes['arrow__direction__' + direction], size && classes['arrow__size__' + size]),
 			onClick: onClick,
-			onTouchEnd: onClick
+			onTouchEnd: onClick,
+			'aria-label': title
 		}, props),
 		React__default.createElement(Icon, { fill: !!theme$$1.arrow && theme$$1.arrow.fill || theme.arrow.fill, type: icon })
 	);
@@ -475,7 +477,7 @@ function Footer(_ref, _ref2) {
 		_extends({ className: noImportant.css(classes.footer) }, props),
 		caption ? React__default.createElement(
 			'figcaption',
-			{ className: noImportant.css(classes.footerCaption) },
+			{ className: noImportant.css(classes.footerCaption), 'aria-hidden': true },
 			caption
 		) : React__default.createElement('span', null),
 		imageCount
@@ -534,7 +536,7 @@ function Header(_ref, _ref2) {
 		!!showCloseButton && React__default.createElement(
 			'button',
 			{
-				title: closeButtonTitle,
+				'aria-label': closeButtonTitle,
 				className: noImportant.css(classes.close),
 				onClick: onClose
 			},
@@ -756,7 +758,7 @@ var PaginatedThumbnails = function (_Component) {
 				icon: 'arrowLeft',
 				onClick: this.gotoPrev,
 				style: arrowStyles,
-				title: 'Previous (Left arrow key)',
+				title: 'View Previous Image',
 				type: 'button'
 			});
 		}
@@ -776,7 +778,7 @@ var PaginatedThumbnails = function (_Component) {
 				icon: 'arrowRight',
 				onClick: this.gotoNext,
 				style: arrowStyles,
-				title: 'Next (Right arrow key)',
+				title: 'View Next Image',
 				type: 'button'
 			});
 		}
@@ -806,11 +808,13 @@ var PaginatedThumbnails = function (_Component) {
 				{ className: noImportant.css(classes.paginatedThumbnails) },
 				this.renderArrowPrev(),
 				thumbnails.map(function (img, idx) {
-					return React__default.createElement(Thumbnail, _extends({ key: baseOffset + idx
+					return React__default.createElement(Thumbnail, _extends({
+						key: baseOffset + idx
 					}, img, {
 						index: baseOffset + idx,
 						onClick: onClickThumbnail,
-						active: baseOffset + idx === currentImage }));
+						active: baseOffset + idx === currentImage
+					}));
 				}),
 				this.renderArrowNext()
 			);
@@ -1006,7 +1010,7 @@ function bindFunctions(functions) {
 
 var canUseDom = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
 
-var Lock = require('react-focus-lock').default;
+var LockFocus = require('react-focus-lock').default;
 
 // consumers sometimes provide incorrect type or casing
 function normalizeSourceSet(data) {
@@ -1252,7 +1256,7 @@ var Lightbox = function (_Component) {
 					onTouchEnd: backdropClosesModal && this.closeBackdrop
 				},
 				React__default.createElement(
-					Lock,
+					LockFocus,
 					{ disabled: !isOpen },
 					React__default.createElement(
 						'div',
@@ -1353,7 +1357,8 @@ var Lightbox = function (_Component) {
 			    currentImage = _props6.currentImage,
 			    images = _props6.images,
 			    imageCountSeparator = _props6.imageCountSeparator,
-			    showImageCount = _props6.showImageCount;
+			    showImageCount = _props6.showImageCount,
+			    imageCount = _props6.imageCount;
 
 
 			if (!images || !images.length) return null;
@@ -1362,7 +1367,7 @@ var Lightbox = function (_Component) {
 				caption: images[currentImage].caption,
 				countCurrent: currentImage + 1,
 				countSeparator: imageCountSeparator,
-				countTotal: images.length,
+				countTotal: imageCount || images.length,
 				showCount: showImageCount
 			});
 		}
@@ -1402,6 +1407,7 @@ Lightbox.propTypes = {
 	currentImage: PropTypes.number,
 	customControls: PropTypes.arrayOf(PropTypes.node),
 	enableKeyboardInput: PropTypes.bool,
+	imageCount: PropTypes.number,
 	imageCountSeparator: PropTypes.string,
 	images: PropTypes.arrayOf(PropTypes.shape({
 		src: PropTypes.string.isRequired,
@@ -1429,15 +1435,15 @@ Lightbox.propTypes = {
 	width: PropTypes.number
 };
 Lightbox.defaultProps = {
-	closeButtonTitle: 'Close (Esc)',
+	closeButtonTitle: 'Close Modal',
 	currentImage: 0,
 	enableKeyboardInput: true,
 	imageCountSeparator: ' of ',
-	leftArrowTitle: 'Previous (Left arrow key)',
+	leftArrowTitle: 'View Previous Image',
 	onClickShowNextImage: true,
 	preloadNextImage: true,
 	preventScroll: true,
-	rightArrowTitle: 'Next (Right arrow key)',
+	rightArrowTitle: 'View Next Image',
 	showCloseButton: true,
 	showImageCount: true,
 	spinner: Spinner,

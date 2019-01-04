@@ -11,6 +11,7 @@ function Arrow ({
 	icon,
 	onClick,
 	size,
+	title,
 	...props,
 },
 {
@@ -24,6 +25,7 @@ function Arrow ({
 			className={css(classes.arrow, classes['arrow__direction__' + direction], size && classes['arrow__size__' + size])}
 			onClick={onClick}
 			onTouchEnd={onClick}
+			aria-label={title}
 			{...props}
 		>
 			<Icon fill={!!theme.arrow && theme.arrow.fill || defaults.arrow.fill} type={icon} />
